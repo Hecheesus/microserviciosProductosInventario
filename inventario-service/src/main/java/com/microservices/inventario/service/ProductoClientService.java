@@ -3,10 +3,12 @@ package com.microservices.inventario.service;
 import com.microservices.inventario.exception.ProductoServiceException;
 import com.microservices.inventario.model.ProductoDTO;
 import com.microservices.inventario.model.jsonapi.JsonApiResponse;
-import com.microservices.inventario.model.jsonapi.JsonApiData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -37,13 +39,26 @@ public class ProductoClientService {
         log.info("Consultando producto ID: {} en URL: {}", productoId, url);
 
         try {
-            JsonApiResponse response = restTemplate.getForObject(url, JsonApiResponse.class);
+            // ✅ Usar exchange() con ParameterizedTypeReference para manejar genéricos correctamente
+            ResponseEntity<JsonApiResponse> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<JsonApiResponse>() {}
+            );
 
-            if (response != null && response.getData() != null) {
-                JsonApiData data = (JsonApiData) response.getData();
-                ProductoDTO producto = convertToProductoDTO(data);
-                log.info("Producto obtenido exitosamente: {}", producto);
-                return producto;
+            if (response.getBody() != null && response.getBody().getData() != null) {
+                Object data = response.getBody().getData();
+
+                // Convertir de LinkedHashMap (que es como Jackson deserializa tipos genéricos)
+                if (data instanceof LinkedHashMap) {
+                    LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) data;
+                    ProductoDTO producto = convertFromMap(dataMap);
+                    log.info("Producto obtenido exitosamente: {}", producto);
+                    return producto;
+                }
+
+                throw new ProductoServiceException("Formato inesperado en respuesta del servicio");
             }
 
             throw new ProductoServiceException("Respuesta vacía del servicio de productos");
@@ -60,23 +75,35 @@ public class ProductoClientService {
         }
     }
 
-    private ProductoDTO convertToProductoDTO(JsonApiData data) {
+    private ProductoDTO convertFromMap(LinkedHashMap<String, Object> dataMap) {
         try {
-            Object attributes = data.getAttributes();
+            // Extraer el id del nivel "data"
+            String idString = dataMap.get("id").toString();
 
-            if (attributes instanceof LinkedHashMap) {
-                LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) attributes;
-                ProductoDTO producto = new ProductoDTO();
-                producto.setId(Long.parseLong(data.getId()));
-                producto.setNombre((String) map.get("nombre"));
-                producto.setPrecio(new BigDecimal(map.get("precio").toString()));
-                return producto;
+            // Extraer los attributes que contienen los datos del producto
+            LinkedHashMap<String, Object> attributes =
+                    (LinkedHashMap<String, Object>) dataMap.get("attributes");
+
+            if (attributes == null) {
+                throw new ProductoServiceException("Atributos del producto no encontrados en la respuesta");
             }
 
-            throw new ProductoServiceException("Error al convertir datos del producto");
+            ProductoDTO producto = new ProductoDTO();
+            producto.setId(Long.parseLong(idString));
+            producto.setNombre((String) attributes.get("nombre"));
+
+            // Manejar precio que puede venir como Number, String, etc.
+            Object precioObj = attributes.get("precio");
+            if (precioObj != null) {
+                producto.setPrecio(new BigDecimal(precioObj.toString()));
+            }
+
+            log.debug("Producto convertido: ID={}, Nombre={}", producto.getId(), producto.getNombre());
+            return producto;
+
         } catch (Exception e) {
-            log.error("Error en conversión: {}", e.getMessage());
-            throw new ProductoServiceException("Error al convertir datos del producto", e);
+            log.error("Error en conversión de LinkedHashMap a ProductoDTO: {}", e.getMessage(), e);
+            throw new ProductoServiceException("Error al convertir datos del producto: " + e.getMessage(), e);
         }
     }
 }
