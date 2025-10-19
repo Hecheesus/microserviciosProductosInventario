@@ -30,10 +30,6 @@ Este directorio contiene las colecciones de Postman para probar los microservici
 1. Haz clic en el ícono de engranaje (⚙️) en la esquina superior derecha
 2. Selecciona **Import**
 3. Importa los archivos de la carpeta `environments/`
-4. Selecciona el environment apropiado desde el dropdown antes de ejecutar las pruebas:
-   - **local** - Para desarrollo local
-   - **dev** - Para ambiente de desarrollo
-   - **prod** - Para producción
 
 ## 📂 Estructura de colecciones
 
