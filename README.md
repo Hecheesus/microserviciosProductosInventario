@@ -313,3 +313,6 @@ Ver reporte en: `build/reports/jacoco/test/html/index.html`
 - Respuestas JSON API compliant
 - Mensajes descriptivos
 
+## Diagramas
+- Componentes: diagrams/componentes.puml
+- Secuencia (validación inventario): diagrams/secuencia-validacion-inventario.puml
