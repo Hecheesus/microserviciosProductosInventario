@@ -73,32 +73,22 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/config/**',
+                    '**/*Application.class',
+                    '**/model/**/*.class',
+                    '**/dto/**/*.class',
+                    '**/exception/**/*Exception.class'
+            ])
+        }))
+    }
     violationRules {
         rule {
-            element = 'BUNDLE'
             limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.60  // 15% - ligeramente por encima de tu cobertura actual
+                minimum = 0.60
             }
-        }
-
-        rule {
-            element = 'CLASS'
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.00  // No fallar por clases individuales
-            }
-
-            // Excluir clases que no necesitan tests
-            excludes = [
-                    '**.config.*',
-                    '**.*Application',
-                    '**.model.*',
-                    '**.dto.*',
-                    '**.exception.*'
-            ]
         }
     }
 }

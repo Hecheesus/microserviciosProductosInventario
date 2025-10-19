@@ -46,6 +46,9 @@ public class ProductoClientService {
                     null,
                     new ParameterizedTypeReference<JsonApiResponse>() {}
             );
+            if (response == null || response.getBody() == null) {
+                throw new ProductoServiceException("Respuesta vacía del servicio de productos");
+            }
 
             if (response.getBody() != null && response.getBody().getData() != null) {
                 Object data = response.getBody().getData();
