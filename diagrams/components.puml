@@ -1,0 +1,42 @@
+@startuml
+title Componentes - Productos e Inventario (endpoints)
+skinparam componentStyle rectangle
+left to right direction
+
+[API Gateway] as GW
+[Productos Service:8081] as PROD
+[Inventario Service:8082] as INV
+
+interface I_Productos_API
+interface I_Inventario_API
+
+I_Productos_API -down- PROD
+I_Inventario_API -down- INV
+
+GW ..> I_Productos_API : /api/productos
+GW ..> I_Inventario_API : /api/inventarios | /api/inventario
+
+INV ..> I_Productos_API : obtiene producto por ID
+
+note right of PROD
+Endpoints (8081):
+POST   /api/productos
+GET    /api/productos/{id}
+PUT    /api/productos/{id}
+DELETE /api/productos/{id}
+GET    /api/productos?page=&size=
+DB: MySQL productos_db
+end note
+
+note right of INV
+Endpoints (8082):
+GET    /api/inventarios/{productoId}
+GET    /api/inventario/{id}/stock
+PUT    /api/inventarios/{productoId}
+POST   /api/inventario
+PATCH  /api/inventario/{id}/incrementar
+PATCH  /api/inventario/{id}/decrementar
+Emite eventos al cambiar stock
+DB: MySQL inventario_db
+end note
+@enduml

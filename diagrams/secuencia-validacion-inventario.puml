@@ -1,0 +1,21 @@
+@startuml
+title Secuencia - Validación global en Inventario
+
+actor Cliente
+participant GW as "API Gateway"
+participant INV as "Inventario:8082"
+participant PROD as "Productos:8081"
+
+Cliente -> GW  : {VERBO} {RUTA-INV}\n(ej: PATCH /api/inventario/{id}/decrementar?cantidad=Q)
+GW -> INV      : delega petición
+
+' Regla: verificar existencia del producto SIEMPRE antes de procesar
+INV -> PROD    : GET /api/productos/{productoId}
+alt producto existe [200]
+  PROD --> INV : Producto{id,nombre,precio}
+  INV --> GW   : continúa flujo específico (200/201/204)
+else no existe [404]
+  PROD --> INV : 404 Not Found
+  INV --> GW   : 404 Not Found (no procesa)
+end
+@enduml
