@@ -111,7 +111,7 @@ microservices-productos-inventario/
         │   │   ├── service/
         │   │   └── InventarioApplication.java
         │   └── resources/
-        │       └── application.properties (o application.yml)
+        │       └── application.properties
         └── test/
             └── java/
                 └── com/microservices/inventario/
