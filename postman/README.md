@@ -13,8 +13,8 @@ Este directorio contiene las colecciones de Postman para probar los microservici
 ## 🔧 Requisitos previos
 
 - **Postman** instalado (versión 10.0 o superior)
-- Los microservicios deben estar ejecutándose localmente o en el ambiente correspondiente
-- Docker (opcional, si usas docker-compose)
+- Los microservicios deben estar ejecutándose
+- Docker ( si usas docker-compose)
 
 ## 📥 Importar colecciones
 
@@ -74,22 +74,6 @@ postman/
 
 docker-compose up -d
 
-text
-
-### Manualmente
-
-**Terminal 1 - Servicio de Productos:**
-cd productos-service
-./gradlew bootRun
-
-text
-
-**Terminal 2 - Servicio de Inventario:**
-cd inventario-service
-./gradlew bootRun
-
-text
-
 ## 📊 Flujo de prueba recomendado
 
 1. **Crear productos** (POST en productos-service)
@@ -118,14 +102,6 @@ Si obtienes errores de conexión, verifica:
 
 - Revisa los logs de los microservicios
 - Verifica que la base de datos esté configurada correctamente
-
-## 📄 Notas adicionales
-
-- Todos los endpoints que modifican datos (POST, PUT, PATCH, DELETE) requieren el header `Content-Type: application/json`
-- Los IDs de recursos deben ser valores numéricos válidos
-- Para operaciones PATCH de incrementar/decrementar, el cuerpo debe incluir el campo `cantidad`
-
----
 
 **Última actualización:** Octubre 2025
 **Versión de Postman recomendada:** 10.0+
