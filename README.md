@@ -72,7 +72,6 @@ Se eligió MySQL como base de datos por las siguientes razones:
 ```
 microservices-productos-inventario/
 ├── README.md
-├── INSTALACION-RAPIDA.md
 ├── docker-compose.yml
 ├── .gitignore
 ├── productos-service/
