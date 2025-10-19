@@ -78,6 +78,9 @@ microservices-productos-inventario/
 ├── README.md
 ├── docker-compose.yml
 ├── .gitignore
+├── diagrams/
+│   ├── componentes.puml
+│   └── secuencia-validacion-inventario.puml
 ├── postman/
 │   ├── collections/
 │   │   ├── inventario-service.postman_collection.json
