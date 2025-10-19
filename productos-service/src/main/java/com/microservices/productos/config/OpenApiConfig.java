@@ -19,7 +19,9 @@ import org.springframework.context.annotation.Configuration;
         name = "apiKey",
         type = SecuritySchemeType.APIKEY,
         in = SecuritySchemeIn.HEADER,
-        paramName = "X-API-Key"
+        paramName = "X-API-Key",
+        description = "API Key para autenticación (usar: productos-api-key-2024)"
+
 )
 public class OpenApiConfig {
 }
