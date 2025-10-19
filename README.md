@@ -22,8 +22,12 @@ El sistema está compuesto por dos microservicios independientes:
 - **Base de datos**: MySQL (inventario_db)
 - **Puerto**: 8082
 - **Endpoints principales**:
-  - `GET /api/inventarios/{productoId}` - Consultar inventario de un producto
-  - `PUT /api/inventarios/{productoId}` - Actualizar cantidad tras compra
+  - `GET /api/inventarios/{productoId}` - Obtener inventario por ID
+  - `GET /api/inventario/{id}/stock` -	Consultar stock disponible
+  - `PUT /api/inventarios/{productoId}` - Actualizar inventario completo
+  - `POST /api/inventario` -	Crear nuevo registro de inventario
+  - `PATCH /api/inventario/{id}/incrementar` -	Incrementar stock
+  - `PATCH /api/inventario/{id}/decrementar` -	decrementar stock
   - Emite eventos cuando el inventario cambia
 
 ### Comunicación entre Microservicios
