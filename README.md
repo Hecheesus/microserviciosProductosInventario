@@ -74,6 +74,13 @@ microservices-productos-inventario/
 ├── README.md
 ├── docker-compose.yml
 ├── .gitignore
+├── postman/
+│   ├── collections/
+│   │   ├── inventario-service.postman_collection.json
+│   │   └── productos-service.postman_collection.json
+│   ├── environments/
+│   │   └── local.postman_environment.json
+│   └── README.md
 ├── productos-service/
 │   ├── build.gradle
 │   ├── settings.gradle
