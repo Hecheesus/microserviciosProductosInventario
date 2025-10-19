@@ -22,8 +22,12 @@ El sistema está compuesto por dos microservicios independientes:
 - **Base de datos**: MySQL (inventario_db)
 - **Puerto**: 8082
 - **Endpoints principales**:
-  - `GET /api/inventarios/{productoId}` - Consultar inventario de un producto
-  - `PUT /api/inventarios/{productoId}` - Actualizar cantidad tras compra
+  - `GET /api/inventarios/{productoId}` - Obtener inventario por ID
+  - `GET /api/inventario/{id}/stock` -	Consultar stock disponible
+  - `PUT /api/inventarios/{productoId}` - Actualizar inventario completo
+  - `POST /api/inventario` -	Crear nuevo registro de inventario
+  - `PATCH /api/inventario/{id}/incrementar` -	Incrementar stock
+  - `PATCH /api/inventario/{id}/decrementar` -	decrementar stock
   - Emite eventos cuando el inventario cambia
 
 ### Comunicación entre Microservicios
@@ -74,6 +78,11 @@ microservices-productos-inventario/
 ├── README.md
 ├── docker-compose.yml
 ├── .gitignore
+├── postman/
+│   ├── collections/
+│   │   ├── inventario-service.postman_collection.json
+│   │   └── productos-service.postman_collection.json
+│   └── README.md
 ├── productos-service/
 │   ├── build.gradle
 │   ├── settings.gradle
@@ -209,76 +218,29 @@ Documentación OpenAPI (JSON):
 
 ## 📝 Ejemplos de Uso
 
-### Autenticación
+### 🔐 Autenticación
 
 Todos los endpoints requieren el header `X-API-Key`:
 
-```bash
--H "X-API-Key: productos-api-key-2024"
-```
+- **Productos Service:** `X-API-Key: productos-api-key-2024`
+- **Inventario Service:** `X-API-Key: inventario-api-key-2024`
 
-Para comunicación entre servicios (Inventario → Productos):
-```bash
--H "X-API-Key: inventario-api-key-2024"
-```
+### 🧪 Pruebas con Postman
 
-### Crear un Producto
+Este proyecto incluye colecciones completas de Postman para facilitar las pruebas de ambos microservicios.
 
-```bash
-curl -X POST http://localhost:8081/api/productos \
-  -H "Content-Type: application/vnd.api+json" \
-  -H "X-API-Key: productos-api-key-2024" \
-  -d '{
-    "data": {
-      "type": "productos",
-      "attributes": {
-        "nombre": "Laptop Dell XPS 15",
-        "precio": 1299.99
-      }
-    }
-  }'
-```
+**Para importar y usar las colecciones de Postman, consulta la documentación completa en:**
 
-### Obtener un Producto
+📂 **[postman/README.md](./postman/README.md)**
 
-```bash
-curl -X GET http://localhost:8081/api/productos/1 \
-  -H "Accept: application/vnd.api+json" \
-  -H "X-API-Key: productos-api-key-2024"
-```
+La carpeta `postman/` contiene:
+- Colecciones para Productos Service e Inventario Service
+- Environments configurados
+- Endpoints detallados
+- Instrucciones de configuración y uso
 
-### Listar Productos con Paginación
+---
 
-```bash
-curl -X GET "http://localhost:8081/api/productos?page=0&size=10" \
-  -H "Accept: application/vnd.api+json" \
-  -H "X-API-Key: productos-api-key-2024"
-```
-
-### Consultar Inventario de un Producto
-
-```bash
-curl -X GET http://localhost:8082/api/inventarios/1 \
-  -H "Accept: application/vnd.api+json" \
-  -H "X-API-Key: inventario-api-key-2024"
-```
-
-### Actualizar Cantidad de Inventario
-
-```bash
-curl -X PUT http://localhost:8082/api/inventarios/1 \
-  -H "Content-Type: application/vnd.api+json" \
-  -H "X-API-Key: inventario-api-key-2024" \
-  -d '{
-    "data": {
-      "type": "inventarios",
-      "id": "1",
-      "attributes": {
-        "cantidad": 45
-      }
-    }
-  }'
-```
 
 ## 🧪 Testing
 
