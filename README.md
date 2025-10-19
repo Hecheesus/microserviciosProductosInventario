@@ -91,11 +91,33 @@ microservices-productos-inventario/
 │       │   └── resources/
 │       │       └── application.properties
 │       └── test/
+│            └── java/
+│               └── com/microservices/productos/
+│                    ├── controller/
+│                    └── service/
+│
 └── inventario-service/
     ├── build.gradle
     ├── settings.gradle
     ├── Dockerfile
     └── src/
+        ├── main/
+        │   ├── java/com/microservices/inventario/       
+        │   │   ├── config/
+        │   │   ├── controller/
+        │   │   ├── exception/
+        │   │   ├── model/
+        │   │   ├── repository/
+        │   │   ├── service/
+        │   │   └── InventarioApplication.java
+        │   └── resources/
+        │       └── application.properties (o application.yml)
+        └── test/
+            └── java/
+                └── com/microservices/inventario/
+                    ├── controller/
+                    └── service/
+
 ```
 
 ## 🚀 Instalación y Ejecución
@@ -320,11 +342,6 @@ Ver reporte en: `build/reports/jacoco/test/html/index.html`
 - Docker Compose orchestration
 - Health checks
 - Variables de entorno
-
-✅ **Logging**
-- Logs estructurados
-- Niveles configurables
-- Eventos de inventario
 
 ✅ **Manejo de Errores**
 - Exception handlers globales
